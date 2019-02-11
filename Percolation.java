@@ -1,10 +1,10 @@
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.UF;
+import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 import java.util.Arrays;
 
 public class Percolation {
-    UF uf;
+    WeightedQuickUnionUF uf;
     boolean[] fieldMap;
     int size;
     int openCount = 0;
@@ -15,7 +15,7 @@ public class Percolation {
     public Percolation(int n) {
         size = n;
         // 2 additional array members to store virtual top and bottom
-        uf = new UF((n * n) + 2);
+        uf = new WeightedQuickUnionUF((n * n) + 2);
         // connect top row to virtual top, which is uf[n*n]
         virtualTopIndex = n * n;
         for (int i = 0; i < n; i++) {
