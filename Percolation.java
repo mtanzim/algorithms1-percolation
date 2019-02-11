@@ -8,6 +8,8 @@ public class Percolation {
     boolean[] fieldMap;
     int size;
     int openCount = 0;
+    int virtualTopIndex;
+    int virtualBottomIndex;
 
     // constructor
     public Percolation(int n) {
@@ -15,14 +17,16 @@ public class Percolation {
         // 2 additional array members to store virtual top and bottom
         uf = new UF((n * n) + 2);
         // connect top row to virtual top, which is uf[n*n]
+        virtualTopIndex = n * n;
         for (int i = 0; i < n; i++) {
             StdOut.println("Connecting top row memeber to virtual top: " + i);
-            uf.union(i, n * n);
+            uf.union(i, virtualTopIndex);
         }
+        virtualBottomIndex = n * n + 1;
         // connect bottom row to virtual bottom, which is uf[n*n+1]
         for (int i = n * n - 1; i > n * n - 1 - n; i--) {
-            StdOut.println("Connecting bottom row memeber to virtual top: " + i);
-            uf.union(i, n * n + 1);
+            StdOut.println("Connecting bottom row memeber to virtual bottom: " + i);
+            uf.union(i, virtualBottomIndex);
         }
         fieldMap = new boolean[n * n];
         StdOut.println("Created field with size: " + size);
@@ -36,16 +40,16 @@ public class Percolation {
     private int[] generateAdj(int row, int col) {
         // int myIndex = getFieldIndex(row, col);
         // no top
-        int topIndex = getFieldIndex(row + 1, col);
-        int bottomIndex = getFieldIndex(row - 1, col);
-        int leftIndex = getFieldIndex(row, col - 1);
-        int rightIndex = getFieldIndex(row, col + 1);
-        int[] allIndices = { topIndex, bottomIndex, leftIndex, rightIndex };
-        // int[] filteredIndices = Arrays.stream(allIndices).filter(x -> x > -1 && x < size * size)
-        //                               .toArray();
-        StdOut.println(Arrays.toString(allIndices));
-        // StdOut.println(Arrays.toString(filteredIndices));
-        return allIndices;
+        int bottom = (row != size) ? getFieldIndex(row + 1, col) : -1;
+        int top = (row != 1) ? getFieldIndex(row - 1, col) : -1;
+        int left = (col != 1) ? getFieldIndex(row, col - 1) : -1;
+        int right = (col != size) ? getFieldIndex(row, col + 1) : -1;
+        int[] allIndices = { top, bottom, left, right };
+        int[] filteredIndices = Arrays.stream(allIndices).filter(x -> x > -1)
+                                      .toArray();
+        // StdOut.println(Arrays.toString(allIndices));
+        StdOut.println("Neighbors are: " + Arrays.toString(filteredIndices));
+        return filteredIndices;
     }
 
 
@@ -55,7 +59,13 @@ public class Percolation {
         StdOut.println("Opening: " + mappedI);
         fieldMap[mappedI] = true;
         openCount++;
-        generateAdj(row, col);
+        int[] neighbors = generateAdj(row, col);
+        for (int i = 0; i < neighbors.length; i++) {
+            if (fieldMap[neighbors[i]] && !uf.connected(mappedI, neighbors[i])) {
+                StdOut.println("Unioning " + neighbors[i] + " and " + mappedI);
+                uf.union(mappedI, neighbors[i]);
+            }
+        }
     }
 
     public boolean isOpen(int row, int col) {
@@ -63,7 +73,8 @@ public class Percolation {
     }
 
     public boolean isFull(int row, int col) {
-        return false;
+        int mappedI = getFieldIndex(row, col);
+        return uf.connected(virtualTopIndex, mappedI) && isOpen(row, col);
     }
 
     public int numberOfOpenSites() {
@@ -71,7 +82,8 @@ public class Percolation {
     }
 
     public boolean percolates() {
-        return false;
+        return uf.connected(virtualTopIndex, virtualBottomIndex);
+        // return false;
     }
 
     public static void main(String[] args) {
