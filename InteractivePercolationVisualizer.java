@@ -13,6 +13,7 @@
  ******************************************************************************/
 
 import edu.princeton.cs.algs4.StdDraw;
+
 import edu.princeton.cs.algs4.StdOut;
 
 public class InteractivePercolationVisualizer {
@@ -27,6 +28,7 @@ public class InteractivePercolationVisualizer {
         StdOut.println(n);
 
         StdDraw.enableDoubleBuffering();
+        
         Percolation perc = new Percolation(n);
         PercolationVisualizer.draw(perc, n);
         StdDraw.show();

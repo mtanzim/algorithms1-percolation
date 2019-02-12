@@ -34,6 +34,9 @@ public class Percolation {
     }
 
     private int getFieldIndex(int row, int col) {
+        if (row < 1 || col < 1) {
+            throw new IllegalArgumentException("No!");
+        }
         return (row - 1) * size + (col - 1);
     }
 
@@ -45,13 +48,11 @@ public class Percolation {
         int left = (col != 1) ? getFieldIndex(row, col - 1) : -1;
         int right = (col != size) ? getFieldIndex(row, col + 1) : -1;
         int[] allIndices = { top, bottom, left, right };
-        int[] filteredIndices = Arrays.stream(allIndices).filter(x -> x > -1)
-                                      .toArray();
+        int[] filteredIndices = Arrays.stream(allIndices).filter(x -> x > -1).toArray();
         // StdOut.println(Arrays.toString(allIndices));
         StdOut.println("Neighbors are: " + Arrays.toString(filteredIndices));
         return filteredIndices;
     }
-
 
     public void open(int row, int col) {
         // code to connect items
@@ -88,6 +89,7 @@ public class Percolation {
 
     public static void main(String[] args) {
         int n = Integer.parseInt(args[0]);
+        n = 10;
         Percolation perc = new Percolation(n);
         // assumes rows and cols start a 1
         perc.open(1, 1);
