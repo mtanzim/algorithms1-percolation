@@ -23,17 +23,17 @@ public class Percolation {
         // connect top row to virtual top, which is uf[n*n]
         virtualTopIndex = n * n;
         for (int i = 0; i < n; i++) {
-            StdOut.println("Connecting top row memeber to virtual top: " + i);
+            // stdOut.println("Connecting top row memeber to virtual top: " + i);
             uf.union(i, virtualTopIndex);
         }
         virtualBottomIndex = n * n + 1;
         // connect bottom row to virtual bottom, which is uf[n*n+1]
         for (int i = n * n - 1; i > n * n - 1 - n; i--) {
-            StdOut.println("Connecting bottom row memeber to virtual bottom: " + i);
+            // stdOut.println("Connecting bottom row memeber to virtual bottom: " + i);
             uf.union(i, virtualBottomIndex);
         }
         fieldMap = new boolean[n * n];
-        StdOut.println("Created field with size: " + size);
+        // stdOut.println("Created field with size: " + size);
         // StdOut.println(uf.count());
     }
 
@@ -67,18 +67,18 @@ public class Percolation {
         }
 
         if (isOpen(row, col)) {
-            StdOut.println("Already Open!");
+            // StdOut.println("Already Open!");
             return;
         }
         // code to connect items
         int mappedI = getFieldIndex(row, col);
-        StdOut.println("Opening: " + mappedI);
+        // stdOut.println("Opening: " + mappedI);
         fieldMap[mappedI] = true;
         openCount++;
         int[] neighbors = generateAdj(row, col);
         for (int i = 0; i < neighbors.length; i++) {
             if (fieldMap[neighbors[i]] && !uf.connected(mappedI, neighbors[i])) {
-                StdOut.println("Unioning " + neighbors[i] + " and " + mappedI);
+                // stdOut.println("Unioning " + neighbors[i] + " and " + mappedI);
                 uf.union(mappedI, neighbors[i]);
             }
         }
