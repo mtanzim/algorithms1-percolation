@@ -13,6 +13,10 @@ public class Percolation {
 
     // constructor
     public Percolation(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException();
+        }
+
         size = n;
         // 2 additional array members to store virtual top and bottom
         uf = new WeightedQuickUnionUF((n * n) + 2);
@@ -35,12 +39,15 @@ public class Percolation {
 
     private int getFieldIndex(int row, int col) {
         if (row < 1 || col < 1) {
-            throw new IllegalArgumentException("No!");
+            throw new IllegalArgumentException();
         }
         return (row - 1) * size + (col - 1);
     }
 
     private int[] generateAdj(int row, int col) {
+        if (row < 1 || col < 1) {
+            throw new IllegalArgumentException();
+        }
         // int myIndex = getFieldIndex(row, col);
         // no top
         int bottom = (row != size) ? getFieldIndex(row + 1, col) : -1;
@@ -50,11 +57,19 @@ public class Percolation {
         int[] allIndices = { top, bottom, left, right };
         int[] filteredIndices = Arrays.stream(allIndices).filter(x -> x > -1).toArray();
         // StdOut.println(Arrays.toString(allIndices));
-        StdOut.println("Neighbors are: " + Arrays.toString(filteredIndices));
+        // StdOut.println("Neighbors are: " + Arrays.toString(filteredIndices));
         return filteredIndices;
     }
 
     public void open(int row, int col) {
+        if (row < 1 || col < 1) {
+            throw new IllegalArgumentException();
+        }
+
+        if (isOpen(row, col)) {
+            StdOut.println("Already Open!");
+            return;
+        }
         // code to connect items
         int mappedI = getFieldIndex(row, col);
         StdOut.println("Opening: " + mappedI);
@@ -70,10 +85,16 @@ public class Percolation {
     }
 
     public boolean isOpen(int row, int col) {
+        if (row < 1 || col < 1) {
+            throw new IllegalArgumentException();
+        }
         return fieldMap[getFieldIndex(row, col)];
     }
 
     public boolean isFull(int row, int col) {
+        if (row < 1 || col < 1) {
+            throw new IllegalArgumentException();
+        }
         int mappedI = getFieldIndex(row, col);
         return uf.connected(virtualTopIndex, mappedI) && isOpen(row, col);
     }
@@ -89,7 +110,7 @@ public class Percolation {
 
     public static void main(String[] args) {
         int n = Integer.parseInt(args[0]);
-        n = 10;
+        // n = 10;
         Percolation perc = new Percolation(n);
         // assumes rows and cols start a 1
         perc.open(1, 1);
