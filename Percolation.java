@@ -2,10 +2,10 @@
 // import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.util.Arrays;
+// import java.util.Arrays;
 
 public class Percolation {
-    
+
     private WeightedQuickUnionUF uf;
     private boolean[] fieldMap;
     private int size;
@@ -56,11 +56,14 @@ public class Percolation {
         int top = (row != 1) ? getFieldIndex(row - 1, col) : -1;
         int left = (col != 1) ? getFieldIndex(row, col - 1) : -1;
         int right = (col != size) ? getFieldIndex(row, col + 1) : -1;
+        // ArrayList
         int[] allIndices = { top, bottom, left, right };
-        int[] filteredIndices = Arrays.stream(allIndices).filter(x -> x > -1).toArray();
+        // int[] filteredIndices = allIndices.removeIf(x -> x > -1);
+        // int[] filteredIndices = Arrays.stream(allIndices).filter(x -> x >
+        // -1).toArray();
         // StdOut.println(Arrays.toString(allIndices));
         // StdOut.println("Neighbors are: " + Arrays.toString(filteredIndices));
-        return filteredIndices;
+        return allIndices;
     }
 
     public void open(int row, int col) {
@@ -79,7 +82,7 @@ public class Percolation {
         openCount++;
         int[] neighbors = generateAdj(row, col);
         for (int i = 0; i < neighbors.length; i++) {
-            if (fieldMap[neighbors[i]] && !uf.connected(mappedI, neighbors[i])) {
+            if (neighbors[i] > -1 && fieldMap[neighbors[i]] && !uf.connected(mappedI, neighbors[i])) {
                 // stdOut.println("Unioning " + neighbors[i] + " and " + mappedI);
                 uf.union(mappedI, neighbors[i]);
             }
