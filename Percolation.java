@@ -1,15 +1,17 @@
-import edu.princeton.cs.algs4.StdOut;
+
+// import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 import java.util.Arrays;
 
 public class Percolation {
-    WeightedQuickUnionUF uf;
-    boolean[] fieldMap;
-    int size;
-    int openCount = 0;
-    int virtualTopIndex;
-    int virtualBottomIndex;
+    
+    private WeightedQuickUnionUF uf;
+    private boolean[] fieldMap;
+    private int size;
+    private int virtualTopIndex;
+    private int virtualBottomIndex;
+    private int openCount = 0;
 
     // constructor
     public Percolation(int n) {

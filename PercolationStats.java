@@ -1,7 +1,9 @@
 
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
-import edu.princeton.cs.algs4.StdStats;;
+import edu.princeton.cs.algs4.StdStats;
+
+import edu.princeton.cs.algs4.Stopwatch;
 
 /* *****************************************************************************
  *  Name: PercolationStates
@@ -12,16 +14,15 @@ import edu.princeton.cs.algs4.StdStats;;
 
 public class PercolationStats {
 
-    Percolation perc;
-    int size;
-    int trials;
-    int[] shuffledIndices;
-    double[] resultRatios;
-
-    double mean;
-    double stddev;
-    double confHi;
-    double confLo;
+    private Percolation perc;
+    private int size;
+    private int trials;
+    private int[] shuffledIndices;
+    private double[] resultRatios;
+    private double mean;
+    private double stddev;
+    private double confHi;
+    private double confLo;
 
     public PercolationStats(int n, int trials) {
         if (n <= 0 || trials <= 0) {
@@ -63,7 +64,7 @@ public class PercolationStats {
             // }
             // StdOut.println("Took this many opens: " + perc.openCount);
             // StdOut.println("i:"+ i + ",Ratio: " + ((float)perc.openCount/(size*size)));
-            resultRatios[i] = ((double) perc.openCount / (size * size));
+            resultRatios[i] = ((double) perc.numberOfOpenSites() / (size * size));
         }
 
         mean = StdStats.mean(resultRatios);
@@ -115,7 +116,11 @@ public class PercolationStats {
     public static void main(String[] args) {
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
+
+        Stopwatch stopwatch = new Stopwatch();
         PercolationStats percStats = new PercolationStats(n, trials);
+        double percStatTime = stopwatch.elapsedTime();
+        StdOut.println("It took "+ percStatTime + " seconds.");
         StdOut.println("mean\t\t\t\t= " + percStats.mean());
         StdOut.println("stddev\t\t\t\t= " + percStats.stddev());
         StdOut.println(
